@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
@@ -596,8 +596,23 @@
       font-weight: 300;
       font-style: italic;
       color: #FAF6EF;
-      margin-bottom: 40px;
+      margin-bottom: 8px;
     }
+
+    .countdown-subheading {
+      font-size: .72rem;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      margin-bottom: 36px;
+    }
+
+
+
+
+
+
+
 
     .countdown-heading em {
       color: var(--gold-lt);
@@ -1545,7 +1560,8 @@
 
         <!-- Slide 1 – Betrothal Ceremony -->
         <div class="cd-slide active" id="cdSlide1">
-          <h2 class="countdown-heading">Until we say <em>"I do"</em> — Betrothal Ceremony</h2>
+          <h2 class="countdown-heading">Until Forever Begins</h2>
+          <p class="countdown-subheading">Betrothal Ceremony</p>
           <div class="countdown-timer" id="cd1Timer">
             <div class="cd-unit">
               <div class="cd-num" id="cd1Days">--</div>
@@ -1573,7 +1589,8 @@
 
         <!-- Slide 2 – Holy Matrimony -->
         <div class="cd-slide" id="cdSlide2">
-          <h2 class="countdown-heading">Counting down to <em>Holy Matrimony</em></h2>
+          <h2 class="countdown-heading">Until We Say &quot;I Do&quot;</h2>
+          <p class="countdown-subheading">Holy Matrimony</p>
           <div class="countdown-timer" id="cd2Timer">
             <div class="cd-unit">
               <div class="cd-num" id="cd2Days">--</div>
@@ -1637,7 +1654,7 @@
 
           <div class="venue-divider"></div>
 
-          <span class="detail-label">Reception – Thereafter</span>
+          <span class="detail-label">Reception – 7:00 PM</span>
           <span class="detail-sub">Holy Trinity Church Lawn<br>Powai, Mumbai</span>
           <a href="https://www.google.com/maps/search/?api=1&query=Holy+Trinity+Church+Lawn+Powai+Mumbai"
             target="_blank" rel="noopener noreferrer" class="btn-map">View on Map ↗</a>
@@ -1692,7 +1709,7 @@
             id="invitationCardImage" loading="lazy">
         </div>
         <div class="inv-card-meta">
-          <p class="inv-card-title" id="invitationCardTitle">Elizabeth &amp; Adharsh</p>
+          <p class="inv-card-title" id="invitationCardTitle">Betrothal &amp; Reception</p>
           <p class="inv-card-desc" id="invitationCardDesc">Betrothal ceremony and reception at Christ The King Church
             and Holy Trinity Church Lawn, Mumbai. Saturday, 28 November 2026.</p>
           <button type="button" class="btn-map" id="btnViewCard"
@@ -2099,7 +2116,7 @@
         frame.setAttribute('aria-label', 'Enlarge wedding invitation card');
       } else {
         img.alt = 'Elizabeth & Adharsh Official Betrothal Invitation Card';
-        title.textContent = 'Elizabeth & Adharsh';
+        title.textContent = 'Betrothal & Reception';
         desc.textContent = 'Betrothal ceremony and reception at Christ The King Church and Holy Trinity Church Lawn, Mumbai. Saturday, 28 November 2026.';
         btn.textContent = 'View Engagement Invitation \u2922';
         btn.onclick = () => openLightbox('assets/invitation-card.jpg', 'Official Betrothal Invitation Card');
@@ -2134,7 +2151,7 @@
     const ENGAGEMENT_EVENTS = [
       ['4:00 PM', 'Engagement Holy Mass',
         'Christ The King Church, Bhandup West, Mumbai'],
-      ['6:30 PM Onwards', 'Reception',
+      ['7:00 PM', 'Reception',
         'Holy Trinity Church Lawn, Powai, Mumbai'],
     ];
 
