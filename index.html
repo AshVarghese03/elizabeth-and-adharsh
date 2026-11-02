@@ -1124,47 +1124,49 @@
 ═══════════════════════════════════════════ */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 90px;
+      gap: 16px;
       margin-top: 36px;
     }
 
     .gallery-cell {
-      aspect-ratio: 1;
       background: var(--bg-deep);
-      border-radius: 10px;
+      border-radius: 14px;
       overflow: hidden;
       position: relative;
       cursor: pointer;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, .07);
-      transition: transform .4s cubic-bezier(.16, 1, .3, 1), box-shadow .4s;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .06), 0 1px 3px rgba(0,0,0,.04);
+      transition: transform .45s cubic-bezier(.16, 1, .3, 1), box-shadow .45s, filter .45s;
     }
 
     .gallery-cell:hover {
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 0 18px 44px rgba(0, 0, 0, .16);
+      transform: translateY(-8px) scale(1.015);
+      box-shadow: 0 20px 48px rgba(138, 104, 48, .22), 0 4px 12px rgba(0, 0, 0, .12);
+      z-index: 2;
     }
 
     .gallery-cell img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform .65s cubic-bezier(.16, 1, .3, 1);
+      display: block;
+      transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .5s ease;
     }
 
     .gallery-cell:hover img {
-      transform: scale(1.09);
+      transform: scale(1.08);
     }
 
     .gallery-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(30, 26, 20, .55) 0%, transparent 55%);
+      background: linear-gradient(to top, rgba(20, 16, 12, .65) 0%, rgba(20, 16, 12, .1) 40%, transparent 70%);
       opacity: 0;
-      transition: opacity .35s;
+      transition: opacity .35s ease;
       display: flex;
       align-items: flex-end;
-      padding: 12px;
+      padding: 16px;
     }
 
     .gallery-cell:hover .gallery-overlay {
@@ -1172,22 +1174,76 @@
     }
 
     .gallery-zoom-label {
-      color: rgba(255, 255, 255, .9);
-      font-size: .62rem;
-      letter-spacing: .16em;
+      color: #FAF6EF;
+      font-size: .65rem;
+      letter-spacing: .18em;
       text-transform: uppercase;
+      font-family: var(--font-body);
+      font-weight: 400;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(138, 104, 48, .75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 5px 12px;
+      border-radius: 20px;
     }
 
+    /* Desktop Collage layout (12 columns) */
+    .gc-1  { grid-column: span 4; grid-row: span 4; } /* Portrait */
+    .gc-2  { grid-column: span 5; grid-row: span 4; } /* Portrait */
+    .gc-3  { grid-column: span 3; grid-row: span 4; } /* Landscape featured */
+    .gc-4  { grid-column: span 4; grid-row: span 4; } /* Tall Portrait */
+    .gc-5  { grid-column: span 4; grid-row: span 4; } /* Wide Landscape */
+    .gc-6  { grid-column: span 4; grid-row: span 4; } /* Tall Portrait */
+    .gc-7  { grid-column: span 4; grid-row: span 3; } /* Landscape */
+    .gc-8  { grid-column: span 4; grid-row: span 4; } /* Tall Portrait */
+    .gc-9  { grid-column: span 4; grid-row: span 4; } /* Portrait */
+    .gc-10 { grid-column: span 6; grid-row: span 3; } /* Wide Landscape */
+    .gc-11 { grid-column: span 6; grid-row: span 3; } /* Portrait Wide */
+
+    /* Tablet Collage Layout (6 columns) */
+    @media (max-width: 900px) {
+      .gallery {
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 80px;
+        gap: 12px;
+      }
+      .gc-1  { grid-column: span 3; grid-row: span 4; }
+      .gc-2  { grid-column: span 3; grid-row: span 4; }
+      .gc-3  { grid-column: span 6; grid-row: span 3; }
+      .gc-4  { grid-column: span 3; grid-row: span 4; }
+      .gc-5  { grid-column: span 3; grid-row: span 4; }
+      .gc-6  { grid-column: span 3; grid-row: span 4; }
+      .gc-7  { grid-column: span 3; grid-row: span 3; }
+      .gc-8  { grid-column: span 3; grid-row: span 4; }
+      .gc-9  { grid-column: span 3; grid-row: span 4; }
+      .gc-10 { grid-column: span 6; grid-row: span 3; }
+      .gc-11 { grid-column: span 6; grid-row: span 3; }
+    }
+
+    /* Mobile Collage Layout (2 columns) */
     @media (max-width: 580px) {
       .gallery {
         grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 95px;
         gap: 10px;
+        margin-top: 24px;
       }
+      .gc-1  { grid-column: span 1; grid-row: span 3; }
+      .gc-2  { grid-column: span 1; grid-row: span 3; }
+      .gc-3  { grid-column: span 2; grid-row: span 2; }
+      .gc-4  { grid-column: span 1; grid-row: span 3; }
+      .gc-5  { grid-column: span 1; grid-row: span 3; }
+      .gc-6  { grid-column: span 1; grid-row: span 3; }
+      .gc-7  { grid-column: span 1; grid-row: span 2; }
+      .gc-8  { grid-column: span 1; grid-row: span 3; }
+      .gc-9  { grid-column: span 1; grid-row: span 3; }
+      .gc-10 { grid-column: span 2; grid-row: span 2; }
+      .gc-11 { grid-column: span 2; grid-row: span 2; }
     }
 
-    /* ═══════════════════════════════════════════
-   Lightbox
-═══════════════════════════════════════════ */
     .lightbox {
       position: fixed;
       inset: 0;
@@ -1744,29 +1800,49 @@
         to enlarge.</p>
 
       <div class="gallery fade-up" id="galleryGrid" aria-label="Photo gallery">
-        <div class="gallery-cell" data-idx="0" tabindex="0" role="button" aria-label="View photo 1">
-          <img src="assets/_RAJ0924.JPG" alt="Elizabeth &amp; Adharsh Moment 1" loading="lazy">
-          <div class="gallery-overlay"><span class="gallery-zoom-label">Enlarge ⤢</span></div>
+        <div class="gallery-cell gc-1" data-idx="0" tabindex="0" role="button" aria-label="View photo 1">
+          <img src="assets/gallery-01.jpg" alt="Elizabeth &amp; Adharsh Moment 1" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
         </div>
-        <div class="gallery-cell" data-idx="1" tabindex="0" role="button" aria-label="View photo 2">
-          <img src="assets/_RAJ0980.JPG" alt="Elizabeth &amp; Adharsh Moment 2" loading="lazy">
-          <div class="gallery-overlay"><span class="gallery-zoom-label">Enlarge ⤢</span></div>
+        <div class="gallery-cell gc-2" data-idx="1" tabindex="0" role="button" aria-label="View photo 2">
+          <img src="assets/gallery-02.jpg" alt="Elizabeth &amp; Adharsh Moment 2" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
         </div>
-        <div class="gallery-cell" data-idx="2" tabindex="0" role="button" aria-label="View photo 3">
-          <img src="assets/_RAJ1046.JPG" alt="Elizabeth &amp; Adharsh Moment 3" loading="lazy">
-          <div class="gallery-overlay"><span class="gallery-zoom-label">Enlarge ⤢</span></div>
+        <div class="gallery-cell gc-3" data-idx="2" tabindex="0" role="button" aria-label="View photo 3">
+          <img src="assets/gallery-03.jpg" alt="Elizabeth &amp; Adharsh Moment 3" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
         </div>
-        <div class="gallery-cell" data-idx="3" tabindex="0" role="button" aria-label="View photo 4">
-          <img src="assets/_RAJ1071.JPG" alt="Elizabeth &amp; Adharsh Moment 4" loading="lazy">
-          <div class="gallery-overlay"><span class="gallery-zoom-label">Enlarge ⤢</span></div>
+        <div class="gallery-cell gc-4" data-idx="3" tabindex="0" role="button" aria-label="View photo 4">
+          <img src="assets/gallery-04.jpg" alt="Elizabeth &amp; Adharsh Moment 4" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
         </div>
-        <div class="gallery-cell" data-idx="4" tabindex="0" role="button" aria-label="View photo 5">
-          <img src="assets/_RAJ1171.JPG" alt="Elizabeth &amp; Adharsh Moment 5" loading="lazy">
-          <div class="gallery-overlay"><span class="gallery-zoom-label">Enlarge ⤢</span></div>
+        <div class="gallery-cell gc-5" data-idx="4" tabindex="0" role="button" aria-label="View photo 5">
+          <img src="assets/gallery-05.jpg" alt="Elizabeth &amp; Adharsh Moment 5" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
         </div>
-        <div class="gallery-cell" data-idx="5" tabindex="0" role="button" aria-label="View photo 6">
-          <img src="assets/_RAJ1232.JPG" alt="Elizabeth &amp; Adharsh Moment 6" loading="lazy">
-          <div class="gallery-overlay"><span class="gallery-zoom-label">Enlarge ⤢</span></div>
+        <div class="gallery-cell gc-6" data-idx="5" tabindex="0" role="button" aria-label="View photo 6">
+          <img src="assets/gallery-06.jpg" alt="Elizabeth &amp; Adharsh Moment 6" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
+        </div>
+        <div class="gallery-cell gc-7" data-idx="6" tabindex="0" role="button" aria-label="View photo 7">
+          <img src="assets/gallery-07.jpg" alt="Elizabeth &amp; Adharsh Moment 7" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
+        </div>
+        <div class="gallery-cell gc-8" data-idx="7" tabindex="0" role="button" aria-label="View photo 8">
+          <img src="assets/gallery-08.jpg" alt="Elizabeth &amp; Adharsh Moment 8" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
+        </div>
+        <div class="gallery-cell gc-9" data-idx="8" tabindex="0" role="button" aria-label="View photo 9">
+          <img src="assets/gallery-09.jpg" alt="Elizabeth &amp; Adharsh Moment 9" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
+        </div>
+        <div class="gallery-cell gc-10" data-idx="9" tabindex="0" role="button" aria-label="View photo 10">
+          <img src="assets/gallery-10.jpg" alt="Elizabeth &amp; Adharsh Moment 10" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
+        </div>
+        <div class="gallery-cell gc-11" data-idx="10" tabindex="0" role="button" aria-label="View photo 11">
+          <img src="assets/gallery-11.jpg" alt="Elizabeth &amp; Adharsh Moment 11" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom-label">View â¤¢</span></div>
         </div>
       </div>
     </div>
@@ -2000,12 +2076,17 @@
       const lbNext = document.getElementById('lbNext');
 
       const galleryImages = [
-        { src: 'assets/_RAJ0924.JPG', caption: 'Elizabeth & Adharsh · Moment 1' },
-        { src: 'assets/_RAJ0980.JPG', caption: 'Elizabeth & Adharsh · Moment 2' },
-        { src: 'assets/_RAJ1046.JPG', caption: 'Elizabeth & Adharsh · Moment 3' },
-        { src: 'assets/_RAJ1071.JPG', caption: 'Elizabeth & Adharsh · Moment 4' },
-        { src: 'assets/_RAJ1171.JPG', caption: 'Elizabeth & Adharsh · Moment 5' },
-        { src: 'assets/_RAJ1232.JPG', caption: 'Elizabeth & Adharsh · Moment 6' },
+        { src: 'assets/gallery-01.jpg', caption: 'Elizabeth & Adharsh Â· Moment 1' },
+        { src: 'assets/gallery-02.jpg', caption: 'Elizabeth & Adharsh Â· Moment 2' },
+        { src: 'assets/gallery-03.jpg', caption: 'Elizabeth & Adharsh Â· Moment 3' },
+        { src: 'assets/gallery-04.jpg', caption: 'Elizabeth & Adharsh Â· Moment 4' },
+        { src: 'assets/gallery-05.jpg', caption: 'Elizabeth & Adharsh Â· Moment 5' },
+        { src: 'assets/gallery-06.jpg', caption: 'Elizabeth & Adharsh Â· Moment 6' },
+        { src: 'assets/gallery-07.jpg', caption: 'Elizabeth & Adharsh Â· Moment 7' },
+        { src: 'assets/gallery-08.jpg', caption: 'Elizabeth & Adharsh Â· Moment 8' },
+        { src: 'assets/gallery-09.jpg', caption: 'Elizabeth & Adharsh Â· Moment 9' },
+        { src: 'assets/gallery-10.jpg', caption: 'Elizabeth & Adharsh Â· Moment 10' },
+        { src: 'assets/gallery-11.jpg', caption: 'Elizabeth & Adharsh Â· Moment 11' },
       ];
       let currentIdx = -1;
       let invitationMode = false;
