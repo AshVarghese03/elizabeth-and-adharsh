@@ -520,6 +520,16 @@
       width: 20px;
       height: 20px;
       color: var(--gold);
+      transition: transform .3s ease;
+    }
+
+    .music-btn.playing svg#musicIconOn {
+      animation: notePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes notePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.14); }
     }
 
     /* ═══════════════════════════════════════════
@@ -2408,9 +2418,9 @@
     </div>
   </div>
 
-  <!-- ════════ MUSIC TOGGLE BUTTON ════════ -->
-  <button class="music-btn" id="musicBtn" aria-label="Toggle wedding music" title="Toggle music">
-    <!-- Icon swaps via JS -->
+    /* ------------------------------------------
+       4. WEDDING MUSIC - AUDIO TRACK PLAYER
+    ------------------------------------------ */
     <svg id="musicIconOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
       stroke-linecap="round" stroke-linejoin="round">
       <path d="M9 18V5l12-2v13" />
@@ -2425,6 +2435,11 @@
       <line x1="2" y1="2" x2="22" y2="22" stroke="currentColor" />
     </svg>
   </button>
+
+  <!-- Background Music Audio Element -->
+  <audio id="weddingAudio" loop preload="auto">
+    <source src="assets/bg-music.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- ════════════════════════════════════════
        SCRIPTS
@@ -2572,140 +2587,117 @@
       }, 1550);
     };
 
-    /* ══════════════════════════════════════════
-       4. WEDDING MUSIC – WEB AUDIO API SYNTHESIS
-    ══════════════════════════════════════════ */
+    /* ------------------------------------------
+       4. WEDDING MUSIC - AUDIO TRACK PLAYER
+    ------------------------------------------ */
     const WeddingMusic = (function () {
-      let ctx = null;
-      let master = null;
+      const audio = document.getElementById('weddingAudio');
       let isPlaying = false;
-      let schedTimer = null;
-      let nextLoopTime = 0;
-      const BPM = 50;
-      const BEAT = 60 / BPM; // ~1.2s per beat
+      const TARGET_VOLUME = 0.7;
+      let fadeTimer = null;
 
-      // D major / Canon in D inspired melody
-      // Format: [frequency_hz, start_beat, duration_beats]
-      const MELODY = [
-        [587.33, 0, 1.5], // D5
-        [523.25, 1.5, .5],  // C#5
-        [493.88, 2, 1],  // B4
-        [440.00, 3, 1.5], // A4
-        [392.00, 4.5, .75], // G4
-        [440.00, 5.25, .75],// A4
-        [493.88, 6, 1.5], // B4
-        [440.00, 7.5, .5], // A4
-        [392.00, 8, 1],  // G4
-        [369.99, 9, 1.5], // F#4
-        [392.00, 10.5, .75], // G4
-        [440.00, 11.25, .75],// A4
-        [493.88, 12, 1.5], // B4
-        [587.33, 13.5, 1], // D5
-        [523.25, 14.5, .5], // C#5
-        [493.88, 15, 1], // B4
-        [440.00, 16, 2], // A4
-        [392.00, 18, 1], // G4
-        [440.00, 19, .5], // A4
-        [493.88, 19.5, .75], // B4
-        [659.25, 20.25, .75],// E5
-        [587.33, 21, .75], // D5
-        [523.25, 21.75, .75],// C#5
-        [493.88, 22.5, 1.5], // B4
-        [440.00, 24, 1], // A4
-        [369.99, 25, 1], // F#4
-        [392.00, 26, 1], // G4
-        [440.00, 27, 1], // A4
-        [293.66, 28, 4], // D4 (long hold, loop point)
-      ]; // 32 beats total
-
-      const BASS = [
-        // D major × 8 beats
-        [146.83, 0, 4], [73.42, 4, 4],
-        // A major × 8 beats
-        [110.00, 8, 4], [55.00, 12, 4],
-        // B minor × 8 beats
-        [123.47, 16, 4], [61.74, 20, 4],
-        // G major × 8 beats
-        [98.00, 24, 4], [49.00, 28, 4],
-      ];
-
-      function ensureCtx() {
-        if (ctx) return true;
-        const AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return false;
-        ctx = new AC();
-        master = ctx.createGain();
-        master.gain.value = 0;
-        master.connect(ctx.destination);
-        return true;
-      }
-
-      function tone(freq, startT, durationBeats, vol, type) {
-        const dur = durationBeats * BEAT;
-        const osc = ctx.createOscillator();
-        const env = ctx.createGain();
-
-        osc.type = type || 'triangle';
-        osc.frequency.value = freq;
-
-        const atk = 0.04;
-        const dec = Math.min(0.25, dur * .35);
-
-        env.gain.setValueAtTime(0, startT);
-        env.gain.linearRampToValueAtTime(vol, startT + atk);
-        env.gain.exponentialRampToValueAtTime(vol * .55, startT + atk + dec);
-        env.gain.exponentialRampToValueAtTime(0.0001, startT + dur - 0.03);
-
-        osc.connect(env);
-        env.connect(master);
-        osc.start(startT);
-        osc.stop(startT + dur + .05);
-      }
-
-      function scheduleLoop(loopStart) {
-        MELODY.forEach(([f, b, d]) => tone(f, loopStart + b * BEAT, d, .42, 'triangle'));
-        BASS.forEach(([f, b, d]) => tone(f, loopStart + b * BEAT, d, .16, 'sine'));
-        return loopStart + 32 * BEAT;
-      }
-
-      function scheduler() {
-        if (!isPlaying) return;
-        if (ctx.currentTime + 15 > nextLoopTime) {
-          nextLoopTime = scheduleLoop(nextLoopTime);
+      function updateUi(playing) {
+        const btn = document.getElementById('musicBtn');
+        const icon0 = document.getElementById('musicIconOn');
+        const icon1 = document.getElementById('musicIconOff');
+        if (!btn || !icon0 || !icon1) return;
+        icon0.style.display = playing ? 'block' : 'none';
+        icon1.style.display = playing ? 'none' : 'block';
+        if (playing) {
+          btn.classList.add('playing');
+          btn.setAttribute('aria-label', 'Mute music');
+          btn.setAttribute('title', 'Pause music');
+        } else {
+          btn.classList.remove('playing');
+          btn.setAttribute('aria-label', 'Play music');
+          btn.setAttribute('title', 'Play music');
         }
-        schedTimer = setTimeout(scheduler, 4000);
+      }
+
+      function fadeIn(durationMs) {
+        if (!audio) return;
+        durationMs = durationMs || 2000;
+        clearInterval(fadeTimer);
+        audio.volume = 0;
+        const stepTime = 50;
+        const stepVol = TARGET_VOLUME / (durationMs / stepTime);
+        fadeTimer = setInterval(() => {
+          if (audio.volume + stepVol >= TARGET_VOLUME) {
+            audio.volume = TARGET_VOLUME;
+            clearInterval(fadeTimer);
+          } else {
+            audio.volume = Math.min(TARGET_VOLUME, audio.volume + stepVol);
+          }
+        }, stepTime);
+      }
+
+      function fadeOut(durationMs, callback) {
+        if (!audio) return;
+        durationMs = durationMs || 600;
+        clearInterval(fadeTimer);
+        const stepTime = 50;
+        const stepVol = audio.volume / (durationMs / stepTime);
+        fadeTimer = setInterval(() => {
+          if (audio.volume - stepVol <= 0.02) {
+            audio.volume = 0;
+            audio.pause();
+            clearInterval(fadeTimer);
+            if (callback) callback();
+          } else {
+            audio.volume = Math.max(0, audio.volume - stepVol);
+          }
+        }, stepTime);
+      }
+
+      // Sync state if audio ends or is paused by the system
+      if (audio) {
+        audio.addEventListener('play', () => {
+          isPlaying = true;
+          updateUi(true);
+        });
+        audio.addEventListener('pause', () => {
+          isPlaying = false;
+          updateUi(false);
+        });
       }
 
       return {
         start() {
-          if (isPlaying || !ensureCtx()) return;
-          ctx.resume().then(() => {
-            isPlaying = true;
-            master.gain.cancelScheduledValues(ctx.currentTime);
-            master.gain.setValueAtTime(0, ctx.currentTime);
-            master.gain.linearRampToValueAtTime(.5, ctx.currentTime + 2.5);
-            nextLoopTime = ctx.currentTime + .3;
-            scheduleLoop(nextLoopTime);
-            nextLoopTime = nextLoopTime + 32 * BEAT;
-            scheduler();
-          });
+          if (!audio) return;
+          audio.volume = 0;
+          const promise = audio.play();
+          if (promise !== undefined) {
+            promise.then(() => {
+              isPlaying = true;
+              fadeIn(2000);
+              updateUi(true);
+            }).catch(err => {
+              console.warn('Audio playback prevented until interaction:', err);
+              isPlaying = false;
+              updateUi(false);
+            });
+          }
         },
         toggle() {
-          if (!ensureCtx()) return false;
+          if (!audio) return false;
           if (isPlaying) {
+            fadeOut(500, () => {
+              isPlaying = false;
+              updateUi(false);
+            });
             isPlaying = false;
-            clearTimeout(schedTimer);
-            master.gain.cancelScheduledValues(ctx.currentTime);
-            master.gain.linearRampToValueAtTime(0, ctx.currentTime + .6);
+            updateUi(false);
           } else {
-            isPlaying = true;
-            ctx.resume();
-            master.gain.cancelScheduledValues(ctx.currentTime);
-            master.gain.linearRampToValueAtTime(.5, ctx.currentTime + .6);
-            if (!nextLoopTime || nextLoopTime < ctx.currentTime) {
-              nextLoopTime = ctx.currentTime + .1;
+            const promise = audio.play();
+            if (promise !== undefined) {
+              promise.then(() => {
+                isPlaying = true;
+                fadeIn(800);
+                updateUi(true);
+              }).catch(err => {
+                console.warn('Audio playback error:', err);
+              });
             }
-            scheduler();
           }
           return isPlaying;
         },
@@ -2713,22 +2705,16 @@
       };
     })();
 
-    /* ══════════════════════════════════════════
+    /* ------------------------------------------
        5. MUSIC BUTTON TOGGLE
-    ══════════════════════════════════════════ */
+    ------------------------------------------ */
     (function () {
       const btn = document.getElementById('musicBtn');
-      const icon0 = document.getElementById('musicIconOn');
-      const icon1 = document.getElementById('musicIconOff');
-
+      if (!btn) return;
       btn.addEventListener('click', () => {
-        const playing = WeddingMusic.toggle();
-        icon0.style.display = playing ? 'block' : 'none';
-        icon1.style.display = playing ? 'none' : 'block';
-        btn.setAttribute('aria-label', playing ? 'Mute music' : 'Unmute music');
+        WeddingMusic.toggle();
       });
     })();
-
     /* ══════════════════════════════════════════
        6. MAIN SITE INIT – runs after cover opens
     ══════════════════════════════════════════ */
