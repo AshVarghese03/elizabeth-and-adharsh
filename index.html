@@ -283,6 +283,16 @@
       line-height: 1.08;
     }
 
+    .cover-name::first-letter,
+    .cover-name-adharsh::first-letter,
+    .cover-name-elizabeth::first-letter {
+      font-family: 'Alex Brush', cursive;
+      font-size: 1.25em;
+      font-weight: 600;
+      display: inline-block;
+      margin-right: -0.02em;
+    }
+
     .cover-amp {
       display: block;
       font-family: var(--font-disp);
@@ -352,21 +362,33 @@
       position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 11px 26px;
-      background: transparent;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 32px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(196, 165, 96, 0.35) 100%);
       border: 1.5px solid var(--gold);
       border-radius: 50px;
       font-family: var(--font-body);
-      font-size: .68rem;
-      font-weight: 400;
-      letter-spacing: .22em;
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .2em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: #4A3510;
       cursor: pointer;
       overflow: hidden;
-      min-height: 48px;
-      transition: color .4s ease, box-shadow .4s ease;
+      min-height: 50px;
+      box-shadow: 0 4px 18px rgba(196, 165, 96, .3);
+      animation: btnGlowPulse 2.4s ease-in-out infinite;
+      transition: color .4s ease, box-shadow .4s ease, transform .25s ease;
+    }
+
+    @keyframes btnGlowPulse {
+      0%, 100% {
+        box-shadow: 0 4px 18px rgba(196, 165, 96, .3), 0 0 0 0 rgba(196, 165, 96, .5);
+      }
+      50% {
+        box-shadow: 0 6px 26px rgba(196, 165, 96, .55), 0 0 0 8px rgba(196, 165, 96, 0);
+      }
     }
 
     .cover-btn::before {
@@ -387,8 +409,9 @@
 
     .cover-btn:hover,
     .cover-btn:focus-visible {
+      transform: translateY(-2px) scale(1.02);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(138, 104, 48, .4);
+      box-shadow: 0 10px 30px rgba(138, 104, 48, .55);
     }
 
     .cover-btn-text,
@@ -406,26 +429,40 @@
       animation-delay: .5s;
     }
 
-    @keyframes btnOrnPulse {
-
-      0%,
-      100% {
-        opacity: .55;
-      }
-
-      50% {
-        opacity: 1;
-      }
-    }
-
-    .cover-footnote {
+    .cover-click-hint {
       margin-top: 14px;
-      font-size: .58rem;
-      letter-spacing: .18em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-size: .64rem;
+      letter-spacing: .16em;
       text-transform: uppercase;
-      color: rgba(92, 80, 64, .4);
+      color: #8A6830;
+      font-weight: 500;
+      background: rgba(196, 165, 96, .14);
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(196, 165, 96, .35);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(138, 104, 48, .08);
+      transition: background .2s, transform .2s;
     }
 
+    .cover-click-hint:hover {
+      background: rgba(196, 165, 96, .26);
+      transform: translateY(-1px);
+    }
+
+    .cover-click-hint span {
+      display: inline-block;
+      animation: handBob 1.6s ease-in-out infinite;
+    }
+
+    @keyframes handBob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
     /* ── Reduced motion cover ── */
     @media (prefers-reduced-motion: reduce) {
       .cover-card-wrap {
@@ -1415,27 +1452,43 @@
        Editorial Photo Gallery with Luxury Cards
        ------------------------------------------- */
     .gallery {
-      column-count: 3;
-      column-gap: 24px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
       margin-top: 36px;
     }
 
     .gallery-card {
-      display: inline-block;
-      width: 100%;
-      break-inside: avoid;
-      -webkit-column-break-inside: avoid;
-      page-break-inside: avoid;
-      margin-bottom: 24px;
       background: #FFFFFF;
       border-radius: 16px;
       border: 1px solid rgba(196, 165, 96, 0.28);
       box-shadow: 0 10px 28px rgba(44, 30, 18, 0.06), 0 2px 6px rgba(44, 30, 18, 0.03);
       overflow: hidden;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
       position: relative;
       transition: transform .42s cubic-bezier(.16, 1, .3, 1), box-shadow .42s ease, border-color .3s ease;
-      vertical-align: top;
+    }
+
+    /* Grid spans for the 7 cards on Desktop (12 columns) */
+    /* Row 1: 3 balanced cards (span 4 each) */
+    .gallery-card:nth-child(1),
+    .gallery-card:nth-child(2),
+    .gallery-card:nth-child(3) {
+      grid-column: span 4;
+    }
+
+    /* Row 2: 2 featured wider cards (span 6 each) */
+    .gallery-card:nth-child(4),
+    .gallery-card:nth-child(5) {
+      grid-column: span 6;
+    }
+
+    /* Row 3: 2 featured wider cards (span 6 each) */
+    .gallery-card:nth-child(6),
+    .gallery-card:nth-child(7) {
+      grid-column: span 6;
     }
 
     .gallery-card:hover,
@@ -1451,11 +1504,22 @@
       overflow: hidden;
       background: var(--bg-deep);
       line-height: 0;
+      height: 310px;
+    }
+
+    /* Slightly taller media for Row 2 & 3 featured cards */
+    .gallery-card:nth-child(4) .gallery-card-media,
+    .gallery-card:nth-child(5) .gallery-card-media,
+    .gallery-card:nth-child(6) .gallery-card-media,
+    .gallery-card:nth-child(7) .gallery-card-media {
+      height: 340px;
     }
 
     .gallery-card-media img {
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
       display: block;
       transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .4s ease;
     }
@@ -1530,6 +1594,8 @@
       border-top: 1px solid rgba(196, 165, 96, 0.16);
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      flex: 1;
       gap: 4px;
       transition: background .3s;
     }
@@ -1555,36 +1621,65 @@
       color: #8A6830;
     }
 
+    /* Tablet breakpoint (2 columns) */
     @media (max-width: 900px) {
       .gallery {
-        column-count: 2;
-        column-gap: 16px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
         margin-top: 28px;
       }
-      .gallery-card {
-        margin-bottom: 16px;
+
+      .gallery-card:nth-child(1),
+      .gallery-card:nth-child(2),
+      .gallery-card:nth-child(3),
+      .gallery-card:nth-child(4),
+      .gallery-card:nth-child(5),
+      .gallery-card:nth-child(6) {
+        grid-column: span 1;
       }
+
+      /* Card 7 spans both columns as a grand finale card */
+      .gallery-card:nth-child(7) {
+        grid-column: span 2;
+      }
+
+      .gallery-card-media {
+        height: 280px !important;
+      }
+
       .gallery-card-body {
         padding: 14px 16px 16px;
       }
+
       .gallery-card-quote {
         font-size: .88rem;
       }
     }
 
+    /* Mobile breakpoint (1 column) */
     @media (max-width: 580px) {
       .gallery {
-        column-count: 1;
-        column-gap: 0;
+        grid-template-columns: 1fr;
+        gap: 18px;
         margin-top: 22px;
       }
+
+      .gallery-card:nth-child(n) {
+        grid-column: span 1;
+      }
+
+      .gallery-card-media {
+        height: 260px !important;
+      }
+
       .gallery-card {
-        margin-bottom: 18px;
         border-radius: 14px;
       }
+
       .gallery-card-body {
         padding: 14px 16px 16px;
       }
+
       .gallery-card-quote {
         font-size: .92rem;
       }
@@ -1909,10 +2004,11 @@
         <p class="cover-together">Together with their families</p>
 
         <!-- Names -->
+        <!-- Names -->
         <div class="cover-names">
-          <span class="cover-name">Adharsh</span>
+          <span class="cover-name cover-name-adharsh">Adharsh</span>
           <span class="cover-amp">&amp;</span>
-          <span class="cover-name">Elizabeth</span>
+          <span class="cover-name cover-name-elizabeth">Elizabeth</span>
         </div>
 
         <!-- Invite text -->
@@ -1939,15 +2035,17 @@
         </div>
 
         <!-- Open button -->
+        <!-- Open button -->
         <button class="cover-btn" id="openInviteBtn" onclick="openInvitation()"
           aria-label="Open the wedding invitation">
-          <span class="cover-btn-orn" aria-hidden="true">✦</span>
+          <span class="cover-btn-orn" aria-hidden="true">&#x2726;</span>
           <span class="cover-btn-text">Open Invitation</span>
-          <span class="cover-btn-orn" aria-hidden="true">✦</span>
+          <span class="cover-btn-orn" aria-hidden="true">&#x2726;</span>
         </button>
 
-        <p class="cover-footnote" aria-hidden="true">scroll to explore ↓</p>
-
+        <p class="cover-click-hint" onclick="openInvitation()" role="button" tabindex="0">
+          <span>&#x1F446;</span> Tap or Click to Open
+        </p>
       </div><!-- /cover-inner -->
     </div><!-- /cover-card-wrap -->
 
@@ -2203,11 +2301,11 @@
           <div class="gallery-card" data-idx="0" tabindex="0" role="button" aria-label="View Memory 01">
             <div class="gallery-card-media">
               <span class="gallery-card-badge">Memory 01</span>
-              <img src="assets/gallery-01.jpg" alt="Adharsh &amp; Elizabeth at the Aquarium" loading="lazy" decoding="async">
+              <img src="assets/gallery-02.jpg" alt="Adharsh &amp; Elizabeth in Winter Wonderland" loading="lazy" decoding="async">
               <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"A world of wonder, but our favorite view is right next to each other."</p>
+              <p class="gallery-card-quote">"Two Grown-Ups, Zero Chill!"</p>
             </div>
           </div>
 
@@ -2215,18 +2313,6 @@
           <div class="gallery-card" data-idx="1" tabindex="0" role="button" aria-label="View Memory 02">
             <div class="gallery-card-media">
               <span class="gallery-card-badge">Memory 02</span>
-              <img src="assets/gallery-02.jpg" alt="Adharsh &amp; Elizabeth in Winter Wonderland" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
-            </div>
-            <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Braving the winter chill together &mdash; warm hearts in a cold wonderland."</p>
-            </div>
-          </div>
-
-          <!-- Memory 03 -->
-          <div class="gallery-card" data-idx="2" tabindex="0" role="button" aria-label="View Memory 03">
-            <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 03</span>
               <img src="assets/gallery-03.jpg" alt="Adharsh &amp; Elizabeth Cafe Selfie" loading="lazy" decoding="async">
               <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
             </div>
@@ -2235,22 +2321,22 @@
             </div>
           </div>
 
-          <!-- Memory 04 -->
-          <div class="gallery-card" data-idx="3" tabindex="0" role="button" aria-label="View Memory 04">
+          <!-- Memory 03 -->
+          <div class="gallery-card" data-idx="2" tabindex="0" role="button" aria-label="View Memory 03">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 04</span>
+              <span class="gallery-card-badge">Memory 03</span>
               <img src="assets/gallery-04.jpg" alt="Adharsh &amp; Elizabeth Late Night Video Call" loading="lazy" decoding="async">
               <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Miles apart, yet never distant &mdash; late-night smiles across the screen."</p>
+              <p class="gallery-card-quote">"Long Distance Edition"</p>
             </div>
           </div>
 
-          <!-- Memory 05 -->
-          <div class="gallery-card" data-idx="4" tabindex="0" role="button" aria-label="View Memory 05">
+          <!-- Memory 04 -->
+          <div class="gallery-card" data-idx="3" tabindex="0" role="button" aria-label="View Memory 04">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 05</span>
+              <span class="gallery-card-badge">Memory 04</span>
               <img src="assets/gallery-05.jpg" alt="Unofficially Official Family Dinner" loading="lazy" decoding="async">
               <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
             </div>
@@ -2259,22 +2345,10 @@
             </div>
           </div>
 
-          <!-- Memory 06 -->
-          <div class="gallery-card" data-idx="5" tabindex="0" role="button" aria-label="View Memory 06">
+          <!-- Memory 05 -->
+          <div class="gallery-card" data-idx="4" tabindex="0" role="button" aria-label="View Memory 05">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 06</span>
-              <img src="assets/gallery-06.jpg" alt="Long Distance Edition Video Call" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
-            </div>
-            <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Long Distance Edition &mdash; making every video call count!"</p>
-            </div>
-          </div>
-
-          <!-- Memory 07 -->
-          <div class="gallery-card" data-idx="6" tabindex="0" role="button" aria-label="View Memory 07">
-            <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 07</span>
+              <span class="gallery-card-badge">Memory 05</span>
               <img src="assets/gallery-07.jpg" alt="Celebration with Family &amp; Video Call" loading="lazy" decoding="async">
               <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
             </div>
@@ -2283,10 +2357,10 @@
             </div>
           </div>
 
-          <!-- Memory 08 -->
-          <div class="gallery-card" data-idx="7" tabindex="0" role="button" aria-label="View Memory 08">
+          <!-- Memory 06 -->
+          <div class="gallery-card" data-idx="5" tabindex="0" role="button" aria-label="View Memory 06">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 08</span>
+              <span class="gallery-card-badge">Memory 06</span>
               <img src="assets/gallery-08.jpg" alt="Dr. Elizabeth Lobo and Adharsh Video Call" loading="lazy" decoding="async">
               <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
             </div>
@@ -2295,39 +2369,15 @@
             </div>
           </div>
 
-          <!-- Memory 09 -->
-          <div class="gallery-card" data-idx="8" tabindex="0" role="button" aria-label="View Memory 09">
+          <!-- Memory 07 -->
+          <div class="gallery-card" data-idx="6" tabindex="0" role="button" aria-label="View Memory 07">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 09</span>
+              <span class="gallery-card-badge">Memory 07</span>
               <img src="assets/gallery-09.jpg" alt="Started with a Bandage Ended with a Ring" loading="lazy" decoding="async">
               <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
             </div>
             <div class="gallery-card-body">
               <p class="gallery-card-quote">"Started with a bandage, ended with a ring!"</p>
-            </div>
-          </div>
-
-          <!-- Memory 10 -->
-          <div class="gallery-card" data-idx="9" tabindex="0" role="button" aria-label="View Memory 10">
-            <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 10</span>
-              <img src="assets/gallery-10.jpg" alt="Romantic Pre-Wedding Shoot Embrace" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
-            </div>
-            <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Two hearts, one rhythm &mdash; the prelude to our forever."</p>
-            </div>
-          </div>
-
-          <!-- Memory 11 -->
-          <div class="gallery-card" data-idx="10" tabindex="0" role="button" aria-label="View Memory 11">
-            <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 11</span>
-              <img src="assets/gallery-11.jpg" alt="Swept Off Our Feet in Kochi" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
-            </div>
-            <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Swept off our feet in Kochi &mdash; head in the clouds, hearts in love."</p>
             </div>
           </div>
 
@@ -2871,59 +2921,39 @@
 
       const galleryImages = [
         {
-          src: 'assets/gallery-01.jpg',
-          badge: 'Memory 01',
-          caption: '"A world of wonder, but our favorite view is right next to each other."'
-        },
-        {
           src: 'assets/gallery-02.jpg',
-          badge: 'Memory 02',
-          caption: '"Braving the winter chill together &mdash; warm hearts in a cold wonderland."'
+          badge: 'Memory 01',
+          caption: '"Two Grown-Ups, Zero Chill!"'
         },
         {
           src: 'assets/gallery-03.jpg',
-          badge: 'Memory 03',
+          badge: 'Memory 02',
           caption: '"We were already close at heart, but that day we were finally close enough to hold hands."'
         },
         {
           src: 'assets/gallery-04.jpg',
-          badge: 'Memory 04',
-          caption: '"Miles apart, yet never distant &mdash; late-night smiles across the screen."'
+          badge: 'Memory 03',
+          caption: '"Long Distance Edition"'
         },
         {
           src: 'assets/gallery-05.jpg',
-          badge: 'Memory 05',
+          badge: 'Memory 04',
           caption: '"Unofficially Official, Family Approved!"'
         },
         {
-          src: 'assets/gallery-06.jpg',
-          badge: 'Memory 06',
-          caption: '"Long Distance Edition &mdash; making every video call count!"'
-        },
-        {
           src: 'assets/gallery-07.jpg',
-          badge: 'Memory 07',
+          badge: 'Memory 05',
           caption: '"Distance couldn\'t miss the party, officially fixed with our favorite people in the room (and on screen!)"'
         },
         {
           src: 'assets/gallery-08.jpg',
-          badge: 'Memory 08',
+          badge: 'Memory 06',
           caption: '"Long-distance work mode looks a little something like this!"'
         },
         {
           src: 'assets/gallery-09.jpg',
-          badge: 'Memory 09',
+          badge: 'Memory 07',
           caption: '"Started with a bandage, ended with a ring!"'
-        },
-        {
-          src: 'assets/gallery-10.jpg',
-          badge: 'Memory 10',
-          caption: '"Two hearts, one rhythm &mdash; the prelude to our forever."'
-        },
-        {
-          src: 'assets/gallery-11.jpg',
-          badge: 'Memory 11',
-          caption: '"Swept off our feet in Kochi &mdash; head in the clouds, hearts in love."'
         },
       ];
 
@@ -2937,6 +2967,7 @@
         }
         return item.caption || '';
       }
+
       function openLb(src, caption, idx) {
         lbImg.src = src;
         currentIdx = (idx !== undefined) ? idx : -1;
