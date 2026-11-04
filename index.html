@@ -383,9 +383,12 @@
     }
 
     @keyframes btnGlowPulse {
-      0%, 100% {
+
+      0%,
+      100% {
         box-shadow: 0 4px 18px rgba(196, 165, 96, .3), 0 0 0 0 rgba(196, 165, 96, .5);
       }
+
       50% {
         box-shadow: 0 6px 26px rgba(196, 165, 96, .55), 0 0 0 8px rgba(196, 165, 96, 0);
       }
@@ -460,9 +463,17 @@
     }
 
     @keyframes handBob {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-3px);
+      }
     }
+
     /* ── Reduced motion cover ── */
     @media (prefers-reduced-motion: reduce) {
       .cover-card-wrap {
@@ -528,8 +539,15 @@
     }
 
     @keyframes notePulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.14); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.14);
+      }
     }
 
     /* ═══════════════════════════════════════════
@@ -1459,119 +1477,128 @@
     }
 
     /* -------------------------------------------
-       Editorial Photo Gallery with Luxury Cards
+       Compact manga-inspired memory gallery
+       Photos remain original; comic treatment is on the frames only.
        ------------------------------------------- */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 24px;
-      margin-top: 36px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin: 24px auto 0;
+      max-width: 1080px;
+      align-items: start;
     }
 
     .gallery-card {
-      background: #FFFFFF;
-      border-radius: 16px;
-      border: 1px solid rgba(196, 165, 96, 0.28);
-      box-shadow: 0 10px 28px rgba(44, 30, 18, 0.06), 0 2px 6px rgba(44, 30, 18, 0.03);
-      overflow: hidden;
-      cursor: pointer;
+      --panel-tilt: 0deg;
+      position: relative;
       display: flex;
       flex-direction: column;
-      position: relative;
-      transition: transform .42s cubic-bezier(.16, 1, .3, 1), box-shadow .42s ease, border-color .3s ease;
+      min-width: 0;
+      overflow: hidden;
+      cursor: pointer;
+      background: #fffdf8;
+      border: 2px solid #30271f;
+      border-radius: 5px 12px 6px 10px;
+      box-shadow: 4px 5px 0 rgba(48, 39, 31, .13), 0 8px 20px rgba(44, 30, 18, .07);
+      transform: rotate(var(--panel-tilt)) translateY(18px);
+      opacity: 0;
+      transition: opacity .65s ease, transform .65s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+      will-change: transform, opacity;
     }
 
-    /* Grid spans for the 7 cards on Desktop (12 columns) */
-    /* Row 1: 3 balanced cards (span 4 each) */
-    .gallery-card:nth-child(1),
-    .gallery-card:nth-child(2),
-    .gallery-card:nth-child(3) {
-      grid-column: span 4;
+    .gallery-card:nth-child(3n + 2) {
+      --panel-tilt: .35deg;
     }
 
-    /* Row 2: 2 featured wider cards (span 6 each) */
-    .gallery-card:nth-child(4),
-    .gallery-card:nth-child(5) {
-      grid-column: span 6;
+    .gallery-card:nth-child(3n) {
+      --panel-tilt: -.3deg;
     }
 
-    /* Row 3: 2 featured wider cards (span 6 each) */
-    .gallery-card:nth-child(6),
+    /* Balance the final, seventh panel in the middle of its own row. */
     .gallery-card:nth-child(7) {
-      grid-column: span 6;
+      grid-column: 2;
+    }
+
+    .gallery-card.in-view {
+      opacity: 1;
+      transform: rotate(var(--panel-tilt)) translateY(0);
     }
 
     .gallery-card:hover,
     .gallery-card:focus-visible {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 45px rgba(184, 142, 60, 0.22), 0 4px 14px rgba(0, 0, 0, 0.08);
-      border-color: rgba(196, 165, 96, 0.7);
+      transform: translateY(-5px) rotate(0deg) scale(1.012);
+      box-shadow: 7px 9px 0 rgba(48, 39, 31, .15), 0 15px 28px rgba(44, 30, 18, .13);
       outline: none;
+      z-index: 2;
     }
 
     .gallery-card-media {
+      height: 218px;
       position: relative;
       overflow: hidden;
-      background: var(--bg-deep);
       line-height: 0;
-      height: 310px;
+      background: #e9dfcf;
+      border-bottom: 2px solid #30271f;
+      isolation: isolate;
     }
 
-    /* Slightly taller media for Row 2 & 3 featured cards */
-    .gallery-card:nth-child(4) .gallery-card-media,
-    .gallery-card:nth-child(5) .gallery-card-media,
-    .gallery-card:nth-child(6) .gallery-card-media,
-    .gallery-card:nth-child(7) .gallery-card-media {
-      height: 340px;
+    .gallery-card-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: .13;
+      background-image: radial-gradient(#1d1712 .7px, transparent .8px);
+      background-size: 5px 5px;
+      mix-blend-mode: multiply;
     }
 
     .gallery-card-media img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      /* Preserve the complete original photograph without cropping faces or edges. */
+      object-fit: contain;
       object-position: center;
+      background: #e9dfcf;
       display: block;
-      transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .4s ease;
+      transition: transform .65s cubic-bezier(.2, .8, .2, 1);
     }
 
     .gallery-card:hover .gallery-card-media img,
     .gallery-card:focus-visible .gallery-card-media img {
-      transform: scale(1.045);
+      transform: scale(1.055);
     }
 
     .gallery-card-badge {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(254, 253, 249, 0.94);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      color: #8A6830;
-      font-family: var(--font-body);
-      font-size: .65rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid rgba(196, 165, 96, 0.35);
+      top: 9px;
+      left: 9px;
       z-index: 2;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 4px 8px;
+      color: #fffdf8;
+      background: #30271f;
+      border: 1px solid #fffdf8;
+      font: 700 .58rem/1 var(--font-body);
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      box-shadow: 2px 2px 0 rgba(0, 0, 0, .25);
       pointer-events: none;
     }
 
     .gallery-card-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(20, 16, 12, .65) 0%, rgba(20, 16, 12, .1) 40%, transparent 70%);
-      opacity: 0;
-      transition: opacity .35s ease;
+      z-index: 3;
       display: flex;
       align-items: flex-end;
       justify-content: flex-end;
-      padding: 14px;
+      padding: 10px;
+      opacity: 0;
       pointer-events: none;
-      z-index: 3;
+      background: linear-gradient(transparent 55%, rgba(20, 15, 10, .45));
+      transition: opacity .25s ease;
     }
 
     .gallery-card:hover .gallery-card-overlay,
@@ -1580,118 +1607,140 @@
     }
 
     .gallery-zoom-pill {
-      color: #FAF6EF;
-      font-size: .65rem;
-      letter-spacing: .16em;
+      padding: 5px 9px;
+      color: #fff;
+      background: #30271f;
+      border: 1px solid #fff;
+      font: 600 .62rem var(--font-body);
+      letter-spacing: .1em;
       text-transform: uppercase;
-      font-family: var(--font-body);
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(138, 104, 48, .88);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, .3);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
     }
 
     .gallery-card-body {
-      padding: 16px 18px 18px;
-      background: #FFFFFF;
-      border-top: 1px solid rgba(196, 165, 96, 0.16);
+      min-height: 76px;
+      padding: 11px 12px 12px;
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      flex: 1;
-      gap: 4px;
-      transition: background .3s;
+      align-items: center;
+      position: relative;
+      background: #fffdf8;
     }
 
-    .gallery-card:hover .gallery-card-body,
-    .gallery-card:focus-visible .gallery-card-body {
-      background: #FAF7F2;
+    .gallery-card-body::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 18px;
+      width: 15px;
+      height: 15px;
+      background: #fffdf8;
+      border-left: 2px solid #30271f;
+      border-top: 2px solid #30271f;
+      transform: rotate(45deg);
+      z-index: 2;
     }
 
     .gallery-card-quote {
-      font-family: var(--font-disp, 'Playfair Display', serif);
-      font-style: italic;
-      font-size: .94rem;
-      line-height: 1.5;
-      color: #2F261E;
+      position: relative;
+      z-index: 3;
       margin: 0;
-      letter-spacing: .01em;
+      color: #34291f;
       text-align: center;
+      font: italic 500 .91rem/1.35 var(--font-disp);
+      letter-spacing: .005em;
     }
 
-    .gallery-card:hover .gallery-card-quote,
-    .gallery-card:focus-visible .gallery-card-quote {
-      color: #8A6830;
+    .gallery-card:nth-child(1) .gallery-card-quote,
+    .gallery-card:nth-child(7) .gallery-card-quote {
+      color: #8a6830;
     }
 
-    /* Tablet breakpoint (2 columns) */
     @media (max-width: 900px) {
       .gallery {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        margin-top: 28px;
-      }
-
-      .gallery-card:nth-child(1),
-      .gallery-card:nth-child(2),
-      .gallery-card:nth-child(3),
-      .gallery-card:nth-child(4),
-      .gallery-card:nth-child(5),
-      .gallery-card:nth-child(6) {
-        grid-column: span 1;
-      }
-
-      /* Card 7 spans both columns as a grand finale card */
-      .gallery-card:nth-child(7) {
-        grid-column: span 2;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        max-width: 720px;
       }
 
       .gallery-card-media {
-        height: 280px !important;
+        height: 205px;
       }
 
       .gallery-card-body {
-        padding: 14px 16px 16px;
+        min-height: 72px;
+        padding: 10px;
       }
 
       .gallery-card-quote {
-        font-size: .88rem;
+        font-size: .86rem;
+      }
+
+      .gallery-card:nth-child(7) {
+        grid-column: 1 / -1;
+        width: calc((100% - 14px) / 2);
+        justify-self: center;
       }
     }
 
-    /* Mobile breakpoint (1 column) */
     @media (max-width: 580px) {
       .gallery {
-        grid-template-columns: 1fr;
-        gap: 18px;
-        margin-top: 22px;
-      }
-
-      .gallery-card:nth-child(n) {
-        grid-column: span 1;
-      }
-
-      .gallery-card-media {
-        height: 260px !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 11px;
+        margin-top: 18px;
       }
 
       .gallery-card {
-        border-radius: 14px;
+        border-width: 1.5px;
+        box-shadow: 3px 4px 0 rgba(48, 39, 31, .12), 0 5px 13px rgba(44, 30, 18, .06);
+      }
+
+      .gallery-card-media {
+        height: clamp(132px, 38vw, 190px);
+      }
+
+      .gallery-card-badge {
+        top: 6px;
+        left: 6px;
+        padding: 3px 5px;
+        font-size: .48rem;
       }
 
       .gallery-card-body {
-        padding: 14px 16px 16px;
+        min-height: 66px;
+        padding: 8px 7px;
       }
 
       .gallery-card-quote {
-        font-size: .92rem;
+        font-size: clamp(.68rem, 2.7vw, .8rem);
+        line-height: 1.25;
+      }
+
+      .gallery-card-overlay {
+        display: none;
+      }
+
+      .gallery-card:nth-child(7) {
+        width: calc((100% - 11px) / 2);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .gallery {
+        grid-template-columns: 1fr;
+        max-width: 310px;
+      }
+
+      .gallery-card:nth-child(7) {
+        grid-column: 1;
+        width: 100%;
+      }
+
+      .gallery-card-media {
+        height: 210px;
+      }
+
+      .gallery-card-quote {
+        font-size: .9rem;
       }
     }
 
@@ -1939,6 +1988,11 @@
 
       #petals-layer {
         display: none;
+      }
+
+      .gallery-card {
+        opacity: 1 !important;
+        transform: none !important;
       }
 
       .h-eyeb,
@@ -2305,92 +2359,93 @@
         <p class="section-body fade-up" style="margin-bottom:28px">Cherished glimpses and special memories. Tap any
           photo to enlarge.</p>
 
-        <div class="gallery fade-up" id="galleryGrid" aria-label="Photo gallery">
-
-          <!-- Memory 01 -->
-          <div class="gallery-card" data-idx="0" tabindex="0" role="button" aria-label="View Memory 01">
+        <div class="gallery" id="galleryGrid" aria-label="Our story in seven comic-book memories">
+          <div class="gallery-card" data-idx="0" tabindex="0" role="button"
+            aria-label="View Memory 01: Started with a bandage, ended with a ring!">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 01</span>
-              <img src="assets/gallery-02.jpg" alt="Adharsh &amp; Elizabeth in Winter Wonderland" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
+              <span class="gallery-card-badge">Chapter 01</span>
+              <img src="assets/gallery-09.jpg" alt="Started with a Bandage Ended with a Ring" loading="lazy"
+                decoding="async">
+              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View panel ↗</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Two Grown-Ups, Zero Chill!"</p>
+              <p class="gallery-card-quote">“Started with a bandage, ended with a ring!”</p>
             </div>
           </div>
-
-          <!-- Memory 02 -->
-          <div class="gallery-card" data-idx="1" tabindex="0" role="button" aria-label="View Memory 02">
+          <div class="gallery-card" data-idx="1" tabindex="0" role="button"
+            aria-label="View Memory 02: We were already close at heart, but that day we were finally close enough to hold hands.">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 02</span>
-              <img src="assets/gallery-03.jpg" alt="Adharsh &amp; Elizabeth Cafe Selfie" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
+              <span class="gallery-card-badge">Chapter 02</span>
+              <img src="assets/gallery-03.jpg" alt="Adharsh &amp; Elizabeth Cafe Selfie" loading="lazy"
+                decoding="async">
+              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View panel ↗</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"We were already close at heart, but that day we were finally close enough to hold hands."</p>
+              <p class="gallery-card-quote">“We were already close at heart, but that day we were finally close enough
+                to hold hands.”</p>
             </div>
           </div>
-
-          <!-- Memory 03 -->
-          <div class="gallery-card" data-idx="2" tabindex="0" role="button" aria-label="View Memory 03">
+          <div class="gallery-card" data-idx="2" tabindex="0" role="button"
+            aria-label="View Memory 03: Two Grown-Ups, Zero Chill!">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 03</span>
-              <img src="assets/gallery-04.jpg" alt="Adharsh &amp; Elizabeth Late Night Video Call" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
+              <span class="gallery-card-badge">Chapter 03</span>
+              <img src="assets/gallery-02.jpg" alt="Adharsh &amp; Elizabeth in Winter Wonderland" loading="lazy"
+                decoding="async">
+              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View panel ↗</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Long Distance Edition"</p>
+              <p class="gallery-card-quote">“Two Grown-Ups, Zero Chill!”</p>
             </div>
           </div>
-
-          <!-- Memory 04 -->
-          <div class="gallery-card" data-idx="3" tabindex="0" role="button" aria-label="View Memory 04">
+          <div class="gallery-card" data-idx="3" tabindex="0" role="button"
+            aria-label="View Memory 04: Unofficially Official, Family Approved!">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 04</span>
-              <img src="assets/gallery-05.jpg" alt="Unofficially Official Family Dinner" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
+              <span class="gallery-card-badge">Chapter 04</span>
+              <img src="assets/gallery-05.jpg" alt="Unofficially Official Family Dinner" loading="lazy"
+                decoding="async">
+              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View panel ↗</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Unofficially Official, Family Approved!"</p>
+              <p class="gallery-card-quote">“Unofficially Official, Family Approved!”</p>
             </div>
           </div>
-
-          <!-- Memory 05 -->
-          <div class="gallery-card" data-idx="4" tabindex="0" role="button" aria-label="View Memory 05">
+          <div class="gallery-card" data-idx="4" tabindex="0" role="button"
+            aria-label="View Memory 05: Long Distance Edition">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 05</span>
-              <img src="assets/gallery-07.jpg" alt="Celebration with Family &amp; Video Call" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
+              <span class="gallery-card-badge">Chapter 05</span>
+              <img src="assets/gallery-04.jpg" alt="Adharsh &amp; Elizabeth Late Night Video Call" loading="lazy"
+                decoding="async">
+              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View panel ↗</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Distance couldn't miss the party, officially fixed with our favorite people in the room (and on screen!)"</p>
+              <p class="gallery-card-quote">“Long Distance Edition”</p>
             </div>
           </div>
-
-          <!-- Memory 06 -->
-          <div class="gallery-card" data-idx="5" tabindex="0" role="button" aria-label="View Memory 06">
+          <div class="gallery-card" data-idx="5" tabindex="0" role="button"
+            aria-label="View Memory 06: Long-distance work mode looks a little something like this!">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 06</span>
-              <img src="assets/gallery-08.jpg" alt="Dr. Elizabeth Lobo and Adharsh Video Call" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
+              <span class="gallery-card-badge">Chapter 06</span>
+              <img src="assets/gallery-08.jpg" alt="Dr. Elizabeth Lobo and Adharsh Video Call" loading="lazy"
+                decoding="async">
+              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View panel ↗</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Long-distance work mode looks a little something like this!"</p>
+              <p class="gallery-card-quote">“Long-distance work mode looks a little something like this!”</p>
             </div>
           </div>
-
-          <!-- Memory 07 -->
-          <div class="gallery-card" data-idx="6" tabindex="0" role="button" aria-label="View Memory 07">
+          <div class="gallery-card" data-idx="6" tabindex="0" role="button"
+            aria-label="View Memory 07: Distance couldn't miss the party, officially fixed with our favorite people in the room (and on screen!)">
             <div class="gallery-card-media">
-              <span class="gallery-card-badge">Memory 07</span>
-              <img src="assets/gallery-09.jpg" alt="Started with a Bandage Ended with a Ring" loading="lazy" decoding="async">
-              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View &nearr;</span></div>
+              <span class="gallery-card-badge">Chapter 07</span>
+              <img src="assets/gallery-07.jpg" alt="Celebration with Family &amp; Video Call" loading="lazy"
+                decoding="async">
+              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View panel ↗</span></div>
             </div>
             <div class="gallery-card-body">
-              <p class="gallery-card-quote">"Started with a bandage, ended with a ring!"</p>
+              <p class="gallery-card-quote">“Distance couldn't miss the party, officially fixed with our favorite people
+                in the room (and on screen!)”</p>
             </div>
           </div>
-
         </div><!-- /gallery -->
       </div>
     </div>
@@ -2723,12 +2778,13 @@
       if ('IntersectionObserver' in window) {
         const obs = new IntersectionObserver((entries) => {
           entries.forEach(e => {
-            if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            if (e.isIntersecting) { e.target.classList.add('visible'); if (e.target.classList.contains('gallery-card')) e.target.classList.add('in-view'); obs.unobserve(e.target); }
           });
         }, { threshold: 0.1 });
-        document.querySelectorAll('.fade-up, .section-heading').forEach(el => obs.observe(el));
+        document.querySelectorAll('.fade-up, .section-heading, .gallery-card').forEach((el, i) => { if (el.classList.contains('gallery-card')) el.style.transitionDelay = (i % 3) * 90 + 'ms'; obs.observe(el); });
       } else {
         document.querySelectorAll('.fade-up, .section-heading').forEach(el => el.classList.add('visible'));
+        document.querySelectorAll('.gallery-card').forEach(el => el.classList.add('in-view'));
       }
     }
 
@@ -2906,41 +2962,13 @@
       const lbNext = document.getElementById('lbNext');
 
       const galleryImages = [
-        {
-          src: 'assets/gallery-02.jpg',
-          badge: 'Memory 01',
-          caption: '"Two Grown-Ups, Zero Chill!"'
-        },
-        {
-          src: 'assets/gallery-03.jpg',
-          badge: 'Memory 02',
-          caption: '"We were already close at heart, but that day we were finally close enough to hold hands."'
-        },
-        {
-          src: 'assets/gallery-04.jpg',
-          badge: 'Memory 03',
-          caption: '"Long Distance Edition"'
-        },
-        {
-          src: 'assets/gallery-05.jpg',
-          badge: 'Memory 04',
-          caption: '"Unofficially Official, Family Approved!"'
-        },
-        {
-          src: 'assets/gallery-07.jpg',
-          badge: 'Memory 05',
-          caption: '"Distance couldn\'t miss the party, officially fixed with our favorite people in the room (and on screen!)"'
-        },
-        {
-          src: 'assets/gallery-08.jpg',
-          badge: 'Memory 06',
-          caption: '"Long-distance work mode looks a little something like this!"'
-        },
-        {
-          src: 'assets/gallery-09.jpg',
-          badge: 'Memory 07',
-          caption: '"Started with a bandage, ended with a ring!"'
-        },
+        { src: 'assets/gallery-09.jpg', badge: 'Chapter 01', caption: '“Started with a bandage, ended with a ring!”' },
+        { src: 'assets/gallery-03.jpg', badge: 'Chapter 02', caption: '“We were already close at heart, but that day we were finally close enough to hold hands.”' },
+        { src: 'assets/gallery-02.jpg', badge: 'Chapter 03', caption: '“Two Grown-Ups, Zero Chill!”' },
+        { src: 'assets/gallery-05.jpg', badge: 'Chapter 04', caption: '“Unofficially Official, Family Approved!”' },
+        { src: 'assets/gallery-04.jpg', badge: 'Chapter 05', caption: '“Long Distance Edition”' },
+        { src: 'assets/gallery-08.jpg', badge: 'Chapter 06', caption: '“Long-distance work mode looks a little something like this!”' },
+        { src: 'assets/gallery-07.jpg', badge: 'Chapter 07', caption: '“Distance couldn’t miss the party, officially fixed with our favorite people in the room (and on screen!)”' }
       ];
 
       let currentIdx = -1, invitationMode = false;
