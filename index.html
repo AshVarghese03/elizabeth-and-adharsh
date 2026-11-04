@@ -1516,9 +1516,9 @@
     }
 
     /* Balance the final, seventh panel in the middle of its own row. */
-    .gallery-card:nth-child(7) {
-      grid-column: 2;
-    }
+    /* Flow cards evenly */
+
+
 
     .gallery-card.in-view {
       opacity: 1;
@@ -1675,9 +1675,9 @@
         font-size: .86rem;
       }
 
-      .gallery-card:nth-child(7) {
-        grid-column: 1 / -1;
-        width: calc((100% - 14px) / 2);
+    /* Flow cards evenly */
+
+
         justify-self: center;
       }
     }
@@ -1719,9 +1719,9 @@
         display: none;
       }
 
-      .gallery-card:nth-child(7) {
-        width: calc((100% - 11px) / 2);
-      }
+    /* Flow cards evenly */
+
+
     }
 
     @media (max-width: 360px) {
@@ -1730,9 +1730,9 @@
         max-width: 310px;
       }
 
-      .gallery-card:nth-child(7) {
-        grid-column: 1;
-        width: 100%;
+    /* Flow cards evenly */
+
+
       }
 
       .gallery-card-media {
@@ -2446,6 +2446,17 @@
                 in the room (and on screen!)”</p>
             </div>
           </div>
+          <div class="gallery-card" data-idx="7" tabindex="0" role="button"
+            aria-label="View Memory 07: Distance couldn't miss the party, officially fixed with our favorite people in the room (and on screen!)">
+            <div class="gallery-card-media">
+              <span class="gallery-card-badge">Chapter 08</span>
+              <img src="assets/gallery-11.jpg" alt="Hinged &amp; Video Call" loading="lazy" decoding="async">
+              <div class="gallery-card-overlay"><span class="gallery-zoom-pill">View panel ↗</span></div>
+            </div>
+            <div class="gallery-card-body">
+              <p class="gallery-card-quote">“Finally Hinged” 💍</p>
+            </div>
+          </div>
         </div><!-- /gallery -->
       </div>
     </div>
@@ -2968,7 +2979,8 @@
         { src: 'assets/gallery-05.jpg', badge: 'Chapter 04', caption: '“Unofficially Official, Family Approved!”' },
         { src: 'assets/gallery-04.jpg', badge: 'Chapter 05', caption: '“Long Distance Edition”' },
         { src: 'assets/gallery-08.jpg', badge: 'Chapter 06', caption: '“Long-distance work mode looks a little something like this!”' },
-        { src: 'assets/gallery-07.jpg', badge: 'Chapter 07', caption: '“Distance couldn’t miss the party, officially fixed with our favorite people in the room (and on screen!)”' }
+        { src: 'assets/gallery-07.jpg', badge: 'Chapter 07', caption: '“Distance couldn’t miss the party, officially fixed with our favorite people in the room (and on screen!)”' },
+        { src: 'assets/gallery-11.jpg', badge: 'Chapter 08', caption: '"Finally Hinged" \uD83D\uDC8D' }
       ];
 
       let currentIdx = -1, invitationMode = false;
